@@ -76,7 +76,7 @@ export function ClienteModal({ cliente, onClose, onSave }: Props) {
 
   // Auto-consultar cuando el documento tiene la longitud correcta
   useEffect(() => {
-    const docLimpio = formData.documento.replace(/\D/g, '');
+    const docLimpio = (formData.documento || '').replace(/\D/g, '');
     
     if ((docLimpio.length === 8 || docLimpio.length === 11) && !cliente) {
       const timer = setTimeout(() => {
@@ -93,7 +93,7 @@ export function ClienteModal({ cliente, onClose, onSave }: Props) {
   };
 
   const handleConsultarClick = () => {
-    consultarDocumento(formData.documento);
+    consultarDocumento(formData.documento || '');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -177,7 +177,7 @@ export function ClienteModal({ cliente, onClose, onSave }: Props) {
               <button
                 type="button"
                 onClick={handleConsultarClick}
-                disabled={consultando || formData.documento.replace(/\D/g, '').length < 8}
+                disabled={consultando || (formData.documento || '').replace(/\D/g, '').length < 8}
                 className="px-3 py-2 bg-gray-100 dark:bg-gray-700 text-blue-600 rounded-lg hover:bg-blue-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 title="Buscar en RENIEC/SUNAT"
               >

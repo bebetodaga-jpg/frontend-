@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Video, VideoOff, Play, Square, RefreshCw, Wifi, WifiOff, User, Clock, Camera, Webcam, Radio } from 'lucide-react';
+import { Video, Play, Square, RefreshCw, Wifi, WifiOff, User, Clock, Camera, Webcam, Radio } from 'lucide-react';
 import { asistenciaService } from '../../../services/personal.service';
 import { getServerUrl } from '../../../services/api';
 import { camaraIPService, type ConfiguracionCamara } from '../../../services/camara-ip.service';

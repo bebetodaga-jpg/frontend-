@@ -17,7 +17,9 @@ import type { ReporteInventario, MovimientoInventario } from '../../../services/
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 
-const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899'];
+// Colores para gráficas
+const _COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899'];
+void _COLORS; // Suppress unused warning - disponible para uso futuro
 
 export function ReportesInventarioPage() {
   const [fechaInicio, setFechaInicio] = useState(() => {

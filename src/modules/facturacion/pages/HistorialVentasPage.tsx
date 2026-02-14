@@ -219,7 +219,7 @@ export function HistorialVentasPage() {
                         <RotateCcw size={18} />
                       </button>
                     )}
-                    {factura.estado !== 'anulada' && factura.estado !== 'nota_credito' && (
+                    {factura.estado !== 'anulada' && factura.tipoComprobante !== 'nota_credito' && (
                       <button
                         onClick={() => handleAnular(factura.id)}
                         className="p-1 text-red-600 hover:bg-red-100 rounded"

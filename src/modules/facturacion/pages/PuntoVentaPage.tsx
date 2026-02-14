@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { 
   Search, Plus, Minus, Trash2, ShoppingCart, User, CreditCard, 
-  Banknote, Receipt, X, Check, AlertCircle, Percent, FileText, Send
+  Banknote, Receipt, X, Check, AlertCircle, Percent, Send
 } from 'lucide-react';
 import { productoService } from '../../../services/inventario.service';
 import { clienteService, facturaService } from '../../../services/facturacion.service';

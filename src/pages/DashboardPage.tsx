@@ -48,11 +48,11 @@ export function DashboardPage() {
     loadDashboardData();
   }, [loadDashboardData]);
 
-  const formatCurrency = (value: number) => {
+  const formatCurrency = (value: number | undefined) => {
     return new Intl.NumberFormat('es-PE', {
       style: 'currency',
       currency: 'PEN',
-    }).format(value);
+    }).format(value ?? 0);
   };
 
   return (
@@ -189,7 +189,7 @@ export function DashboardPage() {
                   tickFormatter={(value) => `S/${(value / 1000).toFixed(0)}k`}
                 />
                 <Tooltip 
-                  formatter={(value: number) => [formatCurrency(value), 'Ventas']}
+                  formatter={(value) => [formatCurrency(value as number), 'Ventas']}
                   labelFormatter={(label) => new Date(label).toLocaleDateString('es-MX')}
                 />
                 <Area 

@@ -77,8 +77,8 @@ export function ReportesVentasPage() {
     loadData();
   }, [loadData]);
 
-  const formatCurrency = (value: number) =>
-    new Intl.NumberFormat('es-PE', { style: 'currency', currency: 'PEN' }).format(value);
+  const formatCurrency = (value: number | undefined) =>
+    new Intl.NumberFormat('es-PE', { style: 'currency', currency: 'PEN' }).format(value ?? 0);
 
   const exportarExcel = () => {
     const wb = XLSX.utils.book_new();
@@ -270,7 +270,7 @@ export function ReportesVentasPage() {
                     tick={{ fontSize: 12 }}
                   />
                   <Tooltip
-                    formatter={(value: number) => formatCurrency(value)}
+                    formatter={(value) => formatCurrency(value as number)}
                     labelFormatter={(label) => label}
                   />
                   <Bar dataKey="totalVentas" fill="#3B82F6" name="Ventas" />
@@ -288,8 +288,8 @@ export function ReportesVentasPage() {
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    label={({ metodoPago, percent }) =>
-                      `${metodoPago}: ${(percent * 100).toFixed(0)}%`
+                    label={({ payload, percent }) =>
+                      `${payload?.metodoPago || ''}: ${((percent ?? 0) * 100).toFixed(0)}%`
                     }
                     outerRadius={100}
                     fill="#8884d8"
@@ -300,7 +300,7 @@ export function ReportesVentasPage() {
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip formatter={(value: number) => formatCurrency(value)} />
+                  <Tooltip formatter={(value) => formatCurrency(value as number)} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -313,7 +313,7 @@ export function ReportesVentasPage() {
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="nombre" tick={{ fontSize: 12 }} />
                   <YAxis />
-                  <Tooltip formatter={(value: number) => formatCurrency(value)} />
+                  <Tooltip formatter={(value) => formatCurrency(value as number)} />
                   <Bar dataKey="total" fill="#10B981" name="Total" />
                 </BarChart>
               </ResponsiveContainer>
@@ -328,7 +328,7 @@ export function ReportesVentasPage() {
                   <XAxis dataKey="hora" tickFormatter={(h) => `${h}:00`} />
                   <YAxis />
                   <Tooltip
-                    formatter={(value: number) => formatCurrency(value)}
+                    formatter={(value) => formatCurrency(value as number)}
                     labelFormatter={(h) => `${h}:00`}
                   />
                   <Line type="monotone" dataKey="total" stroke="#8B5CF6" strokeWidth={2} />
