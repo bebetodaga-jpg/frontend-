@@ -238,36 +238,36 @@ export function PuntoVentaPage() {
   };
 
   return (
-    <div className="h-[calc(100vh-120px)] flex gap-4">
+    <div className="flex flex-col lg:flex-row gap-4 min-h-[calc(100vh-180px)] lg:h-[calc(100vh-120px)]">
       {/* Panel izquierdo - Productos */}
-      <div className="flex-1 flex flex-col bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-        <div className="p-4 border-b">
+      <div className="flex-1 flex flex-col bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden min-h-[300px] lg:min-h-0">
+        <div className="p-3 sm:p-4 border-b">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
             <input
               ref={inputBusquedaRef}
               type="text"
-              placeholder="Buscar producto por nombre o código..."
+              placeholder="Buscar producto..."
               value={busqueda}
               onChange={(e) => setBusqueda(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg"
+              className="w-full pl-10 pr-4 py-2 sm:py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base sm:text-lg"
             />
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-4">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+        <div className="flex-1 overflow-y-auto p-3 sm:p-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3">
             {productosFiltrados.slice(0, 20).map((producto) => (
               <button
                 key={producto.id}
                 onClick={() => agregarAlCarrito(producto)}
-                className="p-3 bg-gray-50 dark:bg-gray-700 hover:bg-blue-50 border border-gray-200 dark:border-gray-700 hover:border-blue-300 rounded-lg text-left transition-colors"
+                className="p-2 sm:p-3 bg-gray-50 dark:bg-gray-700 hover:bg-blue-50 border border-gray-200 dark:border-gray-700 hover:border-blue-300 rounded-lg text-left transition-colors"
               >
-                <p className="font-semibold text-gray-800 dark:text-gray-100 truncate">{producto.nombre}</p>
+                <p className="font-semibold text-gray-800 dark:text-gray-100 truncate text-sm sm:text-base">{producto.nombre}</p>
                 <p className="text-xs text-gray-500 dark:text-gray-400">{producto.codigo}</p>
-                <div className="flex justify-between items-center mt-2">
-                  <span className="text-blue-600 font-bold">{formatCurrency(producto.precioVenta)}</span>
-                  <span className={`text-xs px-2 py-1 rounded ${producto.stockActual <= producto.stockMinimo ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}>
+                <div className="flex justify-between items-center mt-1 sm:mt-2">
+                  <span className="text-blue-600 font-bold text-sm sm:text-base">{formatCurrency(producto.precioVenta)}</span>
+                  <span className={`text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded ${producto.stockActual <= producto.stockMinimo ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}>
                     {producto.stockActual}
                   </span>
                 </div>
@@ -283,9 +283,9 @@ export function PuntoVentaPage() {
       </div>
 
       {/* Panel derecho - Carrito */}
-      <div className="w-96 flex flex-col bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+      <div className="w-full lg:w-96 flex flex-col bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
         {/* Header carrito */}
-        <div className="p-4 border-b bg-gray-50 dark:bg-gray-700">
+        <div className="p-3 sm:p-4 border-b bg-gray-50 dark:bg-gray-700">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <ShoppingCart size={20} className="text-blue-600" />

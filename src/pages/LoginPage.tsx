@@ -101,14 +101,6 @@ export default function LoginPage() {
             )}
           </button>
         </form>
-
-        {/* Credenciales de prueba */}
-        <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-          <p className="text-xs text-gray-500 dark:text-gray-400 text-center mb-2">Credenciales de prueba:</p>
-          <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 text-xs">
-            <p className="text-gray-600 dark:text-gray-300"><strong>Admin:</strong> admin@ferreteria.com / admin123</p>
-          </div>
-        </div>
       </div>
     </div>
   );

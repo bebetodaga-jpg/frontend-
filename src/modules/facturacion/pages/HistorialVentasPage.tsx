@@ -86,18 +86,18 @@ export function HistorialVentasPage() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">Historial de Ventas</h1>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-100">Historial de Ventas</h1>
         <div className="flex items-center gap-4">
-          <div className="bg-green-100 px-4 py-2 rounded-lg">
-            <span className="text-sm text-green-600">Total Ventas:</span>
-            <span className="ml-2 font-bold text-green-800">{formatCurrency(totalVentas)}</span>
+          <div className="bg-green-100 px-3 sm:px-4 py-2 rounded-lg">
+            <span className="text-xs sm:text-sm text-green-600">Total:</span>
+            <span className="ml-1 sm:ml-2 font-bold text-green-800 text-sm sm:text-base">{formatCurrency(totalVentas)}</span>
           </div>
         </div>
       </div>
 
       {/* Filtros */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-3 sm:p-4 mb-6">
         <div className="flex items-center gap-2 mb-4">
           <Filter size={20} className="text-gray-500 dark:text-gray-400" />
           <span className="font-medium text-gray-700 dark:text-gray-200">Filtros</span>
@@ -137,9 +137,68 @@ export function HistorialVentasPage() {
         </div>
       </div>
 
-      {/* Tabla de facturas */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+      {/* Vista móvil - Cards */}
+      <div className="block lg:hidden space-y-3">
+        {facturas.map((factura) => (
+          <div key={factura.id} className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+            <div className="flex justify-between items-start mb-2">
+              <div>
+                <p className="font-semibold text-gray-900 dark:text-gray-100">{factura.numeroFactura}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">{formatDate(factura.fechaEmision)}</p>
+              </div>
+              <span className={`px-2 py-1 rounded-full text-xs font-medium capitalize ${getEstadoStyle(factura.estado)}`}>
+                {factura.estado}
+              </span>
+            </div>
+            <div className="text-sm mb-2">
+              <span className="text-gray-500 dark:text-gray-400">Cliente:</span>
+              <span className="ml-1 text-gray-900 dark:text-gray-100">{factura.cliente?.nombre || 'General'}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="font-bold text-green-600 text-lg">{formatCurrency(factura.total)}</span>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setFacturaSeleccionada(factura)}
+                  className="p-2 text-blue-600 hover:bg-blue-100 rounded-lg"
+                >
+                  <Eye size={18} />
+                </button>
+                {factura.estado === 'pagada' && (
+                  <button
+                    onClick={() => setFacturaDevolucion(factura)}
+                    className="p-2 text-orange-600 hover:bg-orange-100 rounded-lg"
+                  >
+                    <RotateCcw size={18} />
+                  </button>
+                )}
+                {factura.estado !== 'anulada' && factura.tipoComprobante !== 'nota_credito' && (
+                  <button
+                    onClick={() => handleAnular(factura.id)}
+                    className="p-2 text-red-600 hover:bg-red-100 rounded-lg"
+                  >
+                    <XCircle size={18} />
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+        {facturas.length === 0 && !loading && (
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-8 text-center text-gray-500 dark:text-gray-400">
+            No hay facturas registradas
+          </div>
+        )}
+        {loading && (
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-8 text-center text-gray-500 dark:text-gray-400">
+            Cargando...
+          </div>
+        )}
+      </div>
+
+      {/* Vista desktop - Tabla */}
+      <div className="hidden lg:block bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
           <thead className="bg-gray-50 dark:bg-gray-700">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
@@ -246,6 +305,7 @@ export function HistorialVentasPage() {
             Cargando...
           </div>
         )}
+        </div>
       </div>
 
       {facturaSeleccionada && (

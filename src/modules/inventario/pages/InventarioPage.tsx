@@ -94,15 +94,15 @@ export function InventarioPage() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">Inventario de Productos</h1>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-100">Inventario de Productos</h1>
         <Can action="create" subject="Producto">
           <button
             onClick={() => {
               setSelectedProducto(null);
               setShowModal(true);
             }}
-            className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors w-full sm:w-auto justify-center"
           >
             <Plus size={20} />
             Nuevo Producto
@@ -111,8 +111,8 @@ export function InventarioPage() {
       </div>
 
       {/* Barra de búsqueda */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6">
-        <div className="flex gap-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-3 sm:p-4 mb-6">
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
             <input
@@ -133,9 +133,75 @@ export function InventarioPage() {
         </div>
       </div>
 
-      {/* Tabla de productos */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-        <table className="w-full">
+      {/* Vista móvil - Cards */}
+      <div className="block lg:hidden space-y-3">
+        {filteredProductos.map((producto) => (
+          <div key={producto.id} className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+            <div className="flex justify-between items-start mb-2">
+              <div>
+                <p className="font-semibold text-gray-900 dark:text-gray-100">{producto.nombre}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">{producto.codigo}</p>
+              </div>
+              <span
+                className={`flex items-center gap-1 px-2 py-1 rounded text-sm ${
+                  producto.stockActual <= producto.stockMinimo
+                    ? 'bg-red-100 text-red-800'
+                    : 'bg-green-100 text-green-800'
+                }`}
+              >
+                {producto.stockActual <= producto.stockMinimo && <AlertTriangle size={14} />}
+                {producto.stockActual}
+              </span>
+            </div>
+            <div className="grid grid-cols-2 gap-2 text-sm mb-3">
+              <div>
+                <span className="text-gray-500 dark:text-gray-400">Categoría:</span>
+                <span className="ml-1 text-gray-900 dark:text-gray-100">{producto.categoria?.nombre || '-'}</span>
+              </div>
+              <div>
+                <span className="text-gray-500 dark:text-gray-400">P. Venta:</span>
+                <span className="ml-1 font-semibold text-blue-600">S/{producto.precioVenta.toFixed(2)}</span>
+              </div>
+            </div>
+            <div className="flex gap-2 justify-end border-t pt-3 dark:border-gray-700">
+              {can('create', 'MovimientoInventario') && (
+                <button
+                  onClick={() => handleStock(producto)}
+                  className="px-3 py-1.5 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-200"
+                >
+                  Ajustar Stock
+                </button>
+              )}
+              <Can action="update" subject="Producto">
+                <button
+                  onClick={() => handleEdit(producto)}
+                  className="p-1.5 text-blue-600 hover:bg-blue-100 rounded"
+                >
+                  <Edit size={18} />
+                </button>
+              </Can>
+              <Can action="delete" subject="Producto">
+                <button
+                  onClick={() => handleDelete(producto.id)}
+                  className="p-1.5 text-red-600 hover:bg-red-100 rounded"
+                >
+                  <Trash2 size={18} />
+                </button>
+              </Can>
+            </div>
+          </div>
+        ))}
+        {filteredProductos.length === 0 && (
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-8 text-center text-gray-500 dark:text-gray-400">
+            No se encontraron productos
+          </div>
+        )}
+      </div>
+
+      {/* Vista desktop - Tabla */}
+      <div className="hidden lg:block bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full">
           <thead className="bg-gray-50 dark:bg-gray-700">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -240,6 +306,7 @@ export function InventarioPage() {
             )}
           </tbody>
         </table>
+        </div>
       </div>
 
       {/* Modales */}
