@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Variables de tema */
+:root {
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f3f4f6;
+  --color-text-primary: #1f2937;
+  --color-text-secondary: #6b7280;
+}
+
+.dark {
+  --color-bg-primary: #1f2937;
+  --color-bg-secondary: #111827;
+  --color-text-primary: #f9fafb;
+  --color-text-secondary: #9ca3af;
+}
+
+/* Animaciones para notificaciones */
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in 0.3s ease-out;
+}
+
+/* Transiciones suaves para cambio de tema */
+* {
+  transition-property: background-color, border-color;
+  transition-duration: 150ms;
+  transition-timing-function: ease-in-out;
+}
