@@ -6,8 +6,12 @@ import { ProductoModal } from '../components/ProductoModal';
 import { StockModal } from '../components/StockModal';
 import { Can } from '../../../components/auth/ProtectedRoute';
 import { useAbility } from '../../../hooks/useAbility';
+import { useNotification } from '../../../context/NotificationContext';
+import { useConfirm } from '../../../context/ConfirmContext';
 
 export function InventarioPage() {
+  const { success, error: notifyError } = useNotification();
+  const confirmar = useConfirm();
   const [productos, setProductos] = useState<Producto[]>([]);
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [loading, setLoading] = useState(true);
@@ -47,12 +51,20 @@ export function InventarioPage() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm('¿Está seguro de eliminar este producto?')) return;
+    const ok = await confirmar({
+      title: '¿Eliminar este producto?',
+      message: 'También se eliminará de futuros reportes de inventario.',
+      confirmText: 'Eliminar',
+      danger: true,
+    });
+    if (!ok) return;
     try {
       await productoService.delete(id);
       setProductos(productos.filter((p) => p.id !== id));
+      success('Producto eliminado');
     } catch (error) {
       console.error('Error eliminando:', error);
+      notifyError('Error al eliminar producto');
     }
   };
 

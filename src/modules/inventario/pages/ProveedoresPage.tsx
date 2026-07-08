@@ -4,8 +4,12 @@ import { proveedorService } from '../../../services/inventario.service';
 import type { Proveedor } from '../../../types/inventario';
 import { ProveedorModal } from '../components/ProveedorModal';
 import { Can } from '../../../components/auth/ProtectedRoute';
+import { useNotification } from '../../../context/NotificationContext';
+import { useConfirm } from '../../../context/ConfirmContext';
 
 export function ProveedoresPage() {
+  const { success, error: notifyError } = useNotification();
+  const confirmar = useConfirm();
   const [proveedores, setProveedores] = useState<Proveedor[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -36,12 +40,18 @@ export function ProveedoresPage() {
   }, [search]);
 
   const handleDelete = async (id: number) => {
-    if (!confirm('¿Está seguro de eliminar este proveedor?')) return;
+    const ok = await confirmar({
+      title: '¿Eliminar este proveedor?',
+      confirmText: 'Eliminar',
+      danger: true,
+    });
+    if (!ok) return;
     try {
       await proveedorService.delete(id);
       setProveedores(proveedores.filter((p) => p.id !== id));
+      success('Proveedor eliminado');
     } catch (error: any) {
-      alert(error.response?.data?.error || 'Error al eliminar proveedor');
+      notifyError(error.response?.data?.error || 'Error al eliminar proveedor');
     }
   };
 

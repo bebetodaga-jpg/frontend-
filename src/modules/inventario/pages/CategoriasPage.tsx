@@ -4,8 +4,12 @@ import { categoriaService } from '../../../services/inventario.service';
 import type { Categoria } from '../../../types/inventario';
 import { CategoriaModal } from '../components/CategoriaModal';
 import { Can } from '../../../components/auth/ProtectedRoute';
+import { useNotification } from '../../../context/NotificationContext';
+import { useConfirm } from '../../../context/ConfirmContext';
 
 export function CategoriasPage() {
+  const { success, error: notifyError } = useNotification();
+  const confirmar = useConfirm();
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -28,12 +32,18 @@ export function CategoriasPage() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm('¿Está seguro de eliminar esta categoría?')) return;
+    const ok = await confirmar({
+      title: '¿Eliminar esta categoría?',
+      confirmText: 'Eliminar',
+      danger: true,
+    });
+    if (!ok) return;
     try {
       await categoriaService.delete(id);
       setCategorias(categorias.filter((c) => c.id !== id));
+      success('Categoría eliminada');
     } catch (error: any) {
-      alert(error.response?.data?.error || 'Error al eliminar categoría');
+      notifyError(error.response?.data?.error || 'Error al eliminar categoría');
     }
   };
 

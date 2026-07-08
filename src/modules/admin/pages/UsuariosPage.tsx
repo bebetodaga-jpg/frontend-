@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, Key, ToggleLeft, ToggleRight, Shield, ShoppingCart } from 'lucide-react';
 import api from '../../../services/api';
+import { useNotification } from '../../../context/NotificationContext';
+import { useConfirm } from '../../../context/ConfirmContext';
 
 interface Usuario {
   id: number;
@@ -14,6 +16,8 @@ interface Usuario {
 type ApiError = { response?: { data?: { error?: string } } };
 
 export function UsuariosPage() {
+  const { success, error: notifyError } = useNotification();
+  const confirmar = useConfirm();
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -28,6 +32,7 @@ export function UsuariosPage() {
   });
   const [newPassword, setNewPassword] = useState('');
   const [error, setError] = useState('');
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     loadUsuarios();
@@ -47,6 +52,7 @@ export function UsuariosPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setSaving(true);
 
     try {
       if (editingUser) {
@@ -61,9 +67,12 @@ export function UsuariosPage() {
       setShowModal(false);
       resetForm();
       loadUsuarios();
+      success(editingUser ? 'Usuario actualizado' : 'Usuario creado');
     } catch (err: unknown) {
       const apiError = err as ApiError;
       setError(apiError.response?.data?.error || 'Error al guardar usuario');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -72,15 +81,19 @@ export function UsuariosPage() {
     setError('');
 
     if (!selectedUserId) return;
+    setSaving(true);
 
     try {
       await api.post(`/usuarios/${selectedUserId}/reset-password`, { newPassword });
       setShowPasswordModal(false);
       setNewPassword('');
       setSelectedUserId(null);
+      success('Contraseña actualizada');
     } catch (err: unknown) {
       const apiError = err as ApiError;
       setError(apiError.response?.data?.error || 'Error al cambiar contraseña');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -90,19 +103,26 @@ export function UsuariosPage() {
       loadUsuarios();
     } catch (err: unknown) {
       const apiError = err as ApiError;
-      alert(apiError.response?.data?.error || 'Error al cambiar estado');
+      notifyError(apiError.response?.data?.error || 'Error al cambiar estado');
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm('¿Estás seguro de eliminar este usuario?')) return;
+    const ok = await confirmar({
+      title: '¿Eliminar este usuario?',
+      message: 'El usuario perderá el acceso al sistema.',
+      confirmText: 'Eliminar',
+      danger: true,
+    });
+    if (!ok) return;
 
     try {
       await api.delete(`/usuarios/${id}`);
       loadUsuarios();
+      success('Usuario eliminado');
     } catch (err: unknown) {
       const apiError = err as ApiError;
-      alert(apiError.response?.data?.error || 'Error al eliminar usuario');
+      notifyError(apiError.response?.data?.error || 'Error al eliminar usuario');
     }
   };
 
@@ -314,9 +334,10 @@ export function UsuariosPage() {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  disabled={saving}
+                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
                 >
-                  {editingUser ? 'Guardar' : 'Crear'}
+                  {saving ? 'Guardando...' : editingUser ? 'Guardar' : 'Crear'}
                 </button>
               </div>
             </form>
@@ -359,9 +380,10 @@ export function UsuariosPage() {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors"
+                  disabled={saving}
+                  className="flex-1 px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors disabled:opacity-50"
                 >
-                  Cambiar
+                  {saving ? 'Guardando...' : 'Cambiar'}
                 </button>
               </div>
             </form>

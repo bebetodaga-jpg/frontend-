@@ -3,6 +3,7 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import { X, Camera, Upload, CheckCircle, AlertCircle, Trash2 } from 'lucide-react';
 import type { Empleado } from '../../../types/personal';
 import { facialService } from '../../../services/personal.service';
+import { useConfirm } from '../../../context/ConfirmContext';
 
 interface Props {
   empleado: Empleado;
@@ -12,6 +13,7 @@ interface Props {
 
 export function RegistroFacialModal({ empleado, onClose, onSave }: Props) {
   useEscapeKey(onClose);
+  const confirmar = useConfirm();
   const [mode, setMode] = useState<'camera' | 'upload'>('camera');
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -131,7 +133,13 @@ export function RegistroFacialModal({ empleado, onClose, onSave }: Props) {
 
   const handleDelete = async () => {
     if (!empleado.datosFaciales) return;
-    if (!confirm('¿Está seguro de eliminar el registro facial de este empleado?')) return;
+    const ok = await confirmar({
+      title: '¿Eliminar el registro facial?',
+      message: 'El empleado ya no podrá marcar asistencia con reconocimiento facial.',
+      confirmText: 'Eliminar',
+      danger: true,
+    });
+    if (!ok) return;
 
     setLoading(true);
     setError('');

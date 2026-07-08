@@ -4,8 +4,12 @@ import { facturaService } from '../../../services/facturacion.service';
 import type { Factura } from '../../../types/facturacion';
 import { FacturaDetalleModal } from '../components/FacturaDetalleModal';
 import { DevolucionModal } from '../components/DevolucionModal';
+import { useNotification } from '../../../context/NotificationContext';
+import { useConfirm } from '../../../context/ConfirmContext';
 
 export function HistorialVentasPage() {
+  const { success, error: notifyError } = useNotification();
+  const confirmar = useConfirm();
   const [facturas, setFacturas] = useState<Factura[]>([]);
   const [loading, setLoading] = useState(true);
   const [facturaSeleccionada, setFacturaSeleccionada] = useState<Factura | null>(null);
@@ -38,13 +42,20 @@ export function HistorialVentasPage() {
   }, [loadFacturas]);
 
   const handleAnular = async (id: number) => {
-    if (!confirm('¿Está seguro de anular esta factura? El stock será devuelto.')) return;
+    const ok = await confirmar({
+      title: '¿Anular esta factura?',
+      message: 'El stock será devuelto al inventario.',
+      confirmText: 'Anular factura',
+      danger: true,
+    });
+    if (!ok) return;
     try {
       await facturaService.anular(id);
       loadFacturas();
+      success('Factura anulada', 'El stock fue devuelto al inventario.');
     } catch (error: unknown) {
       const err = error as { response?: { data?: { error?: string } } };
-      alert(err.response?.data?.error || 'Error al anular factura');
+      notifyError(err.response?.data?.error || 'Error al anular factura');
     }
   };
 

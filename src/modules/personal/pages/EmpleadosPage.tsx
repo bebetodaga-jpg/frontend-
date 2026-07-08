@@ -6,8 +6,12 @@ import type { Empleado, EstadisticasEmpleados } from '../../../types/personal';
 import { EmpleadoModal } from '../components/EmpleadoModal';
 import { RegistroFacialModal } from '../components/RegistroFacialModal';
 import { Can } from '../../../components/auth/ProtectedRoute';
+import { useNotification } from '../../../context/NotificationContext';
+import { useConfirm } from '../../../context/ConfirmContext';
 
 export function EmpleadosPage() {
+  const { success, error: notifyError } = useNotification();
+  const confirmar = useConfirm();
   const [empleados, setEmpleados] = useState<Empleado[]>([]);
   const [estadisticas, setEstadisticas] = useState<EstadisticasEmpleados | null>(null);
   const [loading, setLoading] = useState(true);
@@ -38,13 +42,20 @@ export function EmpleadosPage() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm('¿Está seguro de eliminar este empleado? Esta acción no se puede deshacer.')) return;
+    const ok = await confirmar({
+      title: '¿Eliminar este empleado?',
+      message: 'Esta acción no se puede deshacer.',
+      confirmText: 'Eliminar',
+      danger: true,
+    });
+    if (!ok) return;
     try {
       await empleadoService.delete(id);
       setEmpleados(empleados.filter((e) => e.id !== id));
       loadData(); // Recargar estadísticas
+      success('Empleado eliminado');
     } catch (error) {
-      alert((error as { response?: { data?: { error?: string } } }).response?.data?.error || 'Error al eliminar empleado');
+      notifyError((error as { response?: { data?: { error?: string } } }).response?.data?.error || 'Error al eliminar empleado');
     }
   };
 

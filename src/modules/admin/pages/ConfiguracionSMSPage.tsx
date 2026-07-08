@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react';
 import { MessageSquare, Send, Settings, History, Phone, Bell, Save, TestTube, CheckCircle, XCircle, Clock } from 'lucide-react';
 import { smsService, type ConfiguracionSMS, type NotificacionSMS } from '../../../services/sms.service';
 import { useAuth } from '../../../context/AuthContext';
+import { useNotification } from '../../../context/NotificationContext';
 
 export function ConfiguracionSMSPage() {
   const { user } = useAuth();
+  const { success, error: notifyError, warning } = useNotification();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState<'config' | 'preferencias' | 'historial'>('config');
@@ -62,9 +64,9 @@ export function ConfiguracionSMSPage() {
     setSaving(true);
     try {
       await smsService.saveConfig(config);
-      alert('Configuración guardada correctamente');
+      success('Configuración guardada correctamente');
     } catch (error: any) {
-      alert('Error: ' + error.message);
+      notifyError('Error al guardar', error.message);
     } finally {
       setSaving(false);
     }
@@ -78,9 +80,9 @@ export function ConfiguracionSMSPage() {
         celular: celular || null,
         ...preferencias,
       });
-      alert('Preferencias guardadas');
+      success('Preferencias guardadas');
     } catch (error: any) {
-      alert('Error: ' + error.message);
+      notifyError('Error al guardar', error.message);
     } finally {
       setSaving(false);
     }
@@ -88,7 +90,7 @@ export function ConfiguracionSMSPage() {
 
   const handleEnviarPrueba = async () => {
     if (!numeroPrueba) {
-      alert('Ingrese un número de teléfono');
+      warning('Ingrese un número de teléfono');
       return;
     }
     setEnviandoPrueba(true);

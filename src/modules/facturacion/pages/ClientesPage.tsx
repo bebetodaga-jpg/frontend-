@@ -3,8 +3,12 @@ import { Plus, Edit, Trash2, Search, Phone, Mail, MapPin, FileText } from 'lucid
 import { clienteService } from '../../../services/facturacion.service';
 import type { Cliente } from '../../../types/facturacion';
 import { ClienteModal } from '../components/ClienteModal';
+import { useNotification } from '../../../context/NotificationContext';
+import { useConfirm } from '../../../context/ConfirmContext';
 
 export function ClientesPage() {
+  const { success, error: notifyError } = useNotification();
+  const confirmar = useConfirm();
   const [clientes, setClientes] = useState<Cliente[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -35,13 +39,19 @@ export function ClientesPage() {
   }, [loadClientes]);
 
   const handleDelete = async (id: number) => {
-    if (!confirm('¿Está seguro de eliminar este cliente?')) return;
+    const ok = await confirmar({
+      title: '¿Eliminar este cliente?',
+      confirmText: 'Eliminar',
+      danger: true,
+    });
+    if (!ok) return;
     try {
       await clienteService.delete(id);
       setClientes(clientes.filter((c) => c.id !== id));
+      success('Cliente eliminado');
     } catch (error: unknown) {
       const err = error as { response?: { data?: { error?: string } } };
-      alert(err.response?.data?.error || 'Error al eliminar cliente');
+      notifyError(err.response?.data?.error || 'Error al eliminar cliente');
     }
   };
 
