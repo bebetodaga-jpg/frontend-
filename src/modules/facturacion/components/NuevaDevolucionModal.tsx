@@ -1,3 +1,4 @@
+import { useEscapeKey } from '../../../hooks/useEscapeKey';
 import { useState } from 'react';
 import { X, Search, RotateCcw, Package, AlertCircle } from 'lucide-react';
 import { devolucionService } from '../../../services/devolucion.service';
@@ -21,6 +22,7 @@ interface ItemDevolucion {
 }
 
 export function NuevaDevolucionModal({ onClose, onSuccess }: Props) {
+  useEscapeKey(onClose);
   const [step, setStep] = useState<'buscar' | 'seleccionar'>('buscar');
   const [busqueda, setBusqueda] = useState('');
   const [facturas, setFacturas] = useState<Factura[]>([]);

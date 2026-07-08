@@ -106,7 +106,7 @@ export function ProveedoresPage() {
                 <Can action="update" subject="Proveedor">
                   <button
                     onClick={() => handleEdit(proveedor)}
-                    className="p-1 text-blue-600 hover:bg-gray-100 dark:bg-gray-700 rounded"
+                    className="p-1 text-blue-600 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
                   >
                     <Edit size={18} />
                   </button>

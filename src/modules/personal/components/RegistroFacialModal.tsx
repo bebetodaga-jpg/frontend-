@@ -1,3 +1,4 @@
+import { useEscapeKey } from '../../../hooks/useEscapeKey';
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { X, Camera, Upload, CheckCircle, AlertCircle, Trash2 } from 'lucide-react';
 import type { Empleado } from '../../../types/personal';
@@ -10,6 +11,7 @@ interface Props {
 }
 
 export function RegistroFacialModal({ empleado, onClose, onSave }: Props) {
+  useEscapeKey(onClose);
   const [mode, setMode] = useState<'camera' | 'upload'>('camera');
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -149,8 +151,8 @@ export function RegistroFacialModal({ empleado, onClose, onSave }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-xl mx-4">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-xl max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center p-4 border-b dark:border-gray-700">
           <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
             Registro Facial - {empleado.nombre} {empleado.apellido}

@@ -264,7 +264,7 @@ export function HistorialVentasPage() {
                   <div className="flex gap-2">
                     <button
                       onClick={() => setFacturaSeleccionada(factura)}
-                      className="p-1 text-blue-600 hover:bg-gray-100 dark:bg-gray-700 rounded"
+                      className="p-1 text-blue-600 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
                       title="Ver detalle"
                     >
                       <Eye size={18} />

@@ -1,3 +1,4 @@
+import { useEscapeKey } from '../../../hooks/useEscapeKey';
 import { useState } from 'react';
 import { X, RotateCcw, Package } from 'lucide-react';
 import type { Factura } from '../../../types/facturacion';
@@ -17,6 +18,7 @@ interface ItemDevolucion {
 }
 
 export function DevolucionModal({ factura, onClose, onDevolucionProcesada }: Props) {
+  useEscapeKey(onClose);
   const [items, setItems] = useState<ItemDevolucion[]>(
     factura.detalles?.map((d) => ({
       productoId: d.productoId,
@@ -74,8 +76,8 @@ export function DevolucionModal({ factura, onClose, onDevolucionProcesada }: Pro
   };
 
   return (
-    <div className="fixed inset-0 bg-blue-600 bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-lg mx-4">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center p-4 border-b">
           <div className="flex items-center gap-2">
             <RotateCcw className="text-orange-600" size={24} />

@@ -1,3 +1,4 @@
+import { useEscapeKey } from '../../../hooks/useEscapeKey';
 import { useState } from 'react';
 import { X, Clock, User } from 'lucide-react';
 import type { Empleado } from '../../../types/personal';
@@ -11,6 +12,7 @@ interface Props {
 }
 
 export function RegistroManualModal({ empleados, onClose, onSave }: Props) {
+  useEscapeKey(onClose);
   const [formData, setFormData] = useState({
     empleadoId: '',
     tipo: 'entrada' as 'entrada' | 'salida',
@@ -54,8 +56,8 @@ export function RegistroManualModal({ empleados, onClose, onSave }: Props) {
   const selectedEmpleado = empleados.find((e) => e.id === Number(formData.empleadoId));
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md mx-4">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center p-4 border-b dark:border-gray-700">
           <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-2">
             <Clock size={24} />

@@ -490,7 +490,7 @@ export function PuntoVentaPage() {
               className={`flex-1 flex items-center justify-center gap-1 py-2 rounded-lg border ${
                 metodoPago === 'efectivo'
                   ? 'bg-green-100 border-green-500 text-green-700'
-                  : 'border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:bg-gray-700'
+                  : 'border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
             >
               <Banknote size={16} />
@@ -501,7 +501,7 @@ export function PuntoVentaPage() {
               className={`flex-1 flex items-center justify-center gap-1 py-2 rounded-lg border ${
                 metodoPago === 'tarjeta'
                   ? 'bg-gray-100 dark:bg-gray-700 border-black text-blue-700'
-                  : 'border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:bg-gray-700'
+                  : 'border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
             >
               <CreditCard size={16} />
@@ -512,7 +512,7 @@ export function PuntoVentaPage() {
               className={`flex-1 flex items-center justify-center gap-1 py-2 rounded-lg border ${
                 metodoPago === 'transferencia'
                   ? 'bg-purple-100 border-purple-500 text-purple-700'
-                  : 'border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:bg-gray-700'
+                  : 'border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
             >
               <Receipt size={16} />

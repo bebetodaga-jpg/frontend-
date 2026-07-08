@@ -1,3 +1,4 @@
+import { useEscapeKey } from '../../../hooks/useEscapeKey';
 import { X, RotateCcw, Package, Calendar, User, FileText, CheckCircle, XCircle, Clock } from 'lucide-react';
 import type { Devolucion } from '../../../types/facturacion';
 
@@ -7,6 +8,7 @@ interface Props {
 }
 
 export function DetalleDevolucionModal({ devolucion, onClose }: Props) {
+  useEscapeKey(onClose);
   const formatDate = (date: string) => {
     return new Date(date).toLocaleDateString('es-PE', {
       day: '2-digit',

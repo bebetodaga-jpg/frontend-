@@ -1,3 +1,4 @@
+import { useEscapeKey } from '../../../hooks/useEscapeKey';
 import { useState } from 'react';
 import { X, Calendar, User, CreditCard, FileText, Download, Loader2 } from 'lucide-react';
 import type { Factura } from '../../../types/facturacion';
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export function FacturaDetalleModal({ factura, onClose }: Props) {
+  useEscapeKey(onClose);
   const [descargando, setDescargando] = useState(false);
 
   const descargarPDF = async () => {
@@ -54,7 +56,7 @@ export function FacturaDetalleModal({ factura, onClose }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 bg-blue-600 bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center p-4 border-b sticky top-0 bg-white dark:bg-gray-800">
           <div className="flex items-center gap-3">

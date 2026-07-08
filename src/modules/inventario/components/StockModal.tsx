@@ -1,3 +1,4 @@
+import { useEscapeKey } from '../../../hooks/useEscapeKey';
 import { useState } from 'react';
 import { X, ArrowUp, ArrowDown } from 'lucide-react';
 import type { Producto, MovimientoStock } from '../../../types/inventario';
@@ -10,6 +11,7 @@ interface Props {
 }
 
 export function StockModal({ producto, onClose, onSave }: Props) {
+  useEscapeKey(onClose);
   const [tipo, setTipo] = useState<'entrada' | 'salida'>('entrada');
   const [cantidad, setCantidad] = useState(1);
   const [motivo, setMotivo] = useState('');
@@ -41,11 +43,11 @@ export function StockModal({ producto, onClose, onSave }: Props) {
     : producto.stockActual - cantidad;
 
   return (
-    <div className="fixed inset-0 bg-blue-600 bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md mx-4">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-xl font-semibold">Movimiento de Stock</h2>
-          <button onClick={onClose} className="p-1 hover:bg-gray-100 dark:bg-gray-700 rounded">
+          <button onClick={onClose} className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
             <X size={24} />
           </button>
         </div>
